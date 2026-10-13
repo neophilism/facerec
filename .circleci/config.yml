@@ -1,0 +1,21 @@
+version: 2.1
+
+# Legacy repository without existing active CI suites. Validate source inventory
+# only; not a replacement for Android runtime or facial recognition accuracy tests.
+jobs:
+  legacy-source-inventory:
+    docker:
+      - image: cimg/python:3.12
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Require tracked legacy documentation and roadmap
+          command: |
+            test -s README.markdown
+            test -s registry/roadmap.json
+            python3 -c 'import json; json.load(open("registry/roadmap.json"))'
+workflows:
+  inventory-only:
+    jobs:
+      - legacy-source-inventory
